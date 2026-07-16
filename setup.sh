@@ -19,7 +19,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLUGIN_NAME="catchmeup"
 CLI="${CATCHMEUP_CLI:-catchmeup}"
-CLI_GIT="git+https://github.com/catchmeupai/cmup-cli.git"
+CLI_REPO="https://github.com/catchmeupai/cmup-cli.git"
 HERMES_BIN="${HERMES_BIN:-}"
 HERMES_HOME_ARG="${HERMES_HOME:-}"
 SKIP_CLI=0; SKIP_LOGIN=0
@@ -39,6 +39,17 @@ info() { printf '  %s\n' "$*"; }
 ok()   { printf '\033[32m✓\033[0m %s\n' "$*"; }
 warn() { printf '\033[33m!\033[0m %s\n' "$*"; }
 
+# Install the CLI from the public repo by packing a tarball and installing that.
+# (`npm i -g git+url` is unreliable for this package — it can omit the built dist/.)
+install_cli_from_repo() {
+  local d tgz rc
+  d="$(mktemp -d)"
+  git clone --depth 1 "$CLI_REPO" "$d/cmup-cli" >/dev/null 2>&1 || { rm -rf "$d"; return 1; }
+  tgz="$(cd "$d/cmup-cli" && npm pack 2>/dev/null | tail -1)" || { rm -rf "$d"; return 1; }
+  npm install -g "$d/cmup-cli/$tgz"; rc=$?
+  rm -rf "$d"; return $rc
+}
+
 # ---------- 1. Node ----------
 if ! command -v node >/dev/null 2>&1; then
   echo "Node.js is required (for the catchmeup CLI). Install Node 18+ and re-run." >&2
@@ -51,9 +62,14 @@ if [[ "$SKIP_CLI" == 0 ]]; then
   if command -v "$CLI" >/dev/null 2>&1; then
     ok "catchmeup CLI already installed: $(command -v "$CLI")"
   else
-    info "Installing the catchmeup CLI (npm global)..."
-    npm install -g catchmeup >/dev/null 2>&1 || npm install -g "$CLI_GIT"
-    ok "catchmeup CLI: $(command -v "$CLI" || echo 'not on PATH — check your npm global bin')"
+    info "Installing the catchmeup CLI (npm registry, else from the public repo)..."
+    npm install -g catchmeup >/dev/null 2>&1 || install_cli_from_repo
+    if command -v "$CLI" >/dev/null 2>&1; then
+      ok "catchmeup CLI: $(command -v "$CLI")"
+    else
+      warn "catchmeup installed but not on PATH. Add your npm global bin (\`npm bin -g\`) to PATH,"
+      warn "then re-run. Note: install with the SAME node/npm that Hermes uses (e.g. Homebrew node)."
+    fi
   fi
 fi
 

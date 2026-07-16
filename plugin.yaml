@@ -1,0 +1,11 @@
+name: catchmeup
+version: 0.1.0
+description: "Wraps the Catch Me Up CLI (catchmeupai.com) — Discord/Slack log archive, AI daily/weekly summaries, keyword search, per-user messages + activity, popular messages, and NotebookLM — as Hermes agent tools."
+author: catchmeup
+hooks: []
+provides:
+  commands: []
+requires_env: []
+optional_env:
+  - name: CATCHMEUP_CLI
+    description: "Path/name of the catchmeup CLI binary (default: catchmeup)."

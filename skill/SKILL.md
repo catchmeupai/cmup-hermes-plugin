@@ -2,8 +2,7 @@
 
 The `catchmeup` toolset gives the agent read access to a team's **Discord/Slack message
 history** on the Catch Me Up platform (catchmeupai.com): raw logs, AI-generated daily/weekly
-summaries, keyword search, per-user messages and activity, popular messages, and NotebookLM
-notebook creation.
+summaries, keyword search, per-user messages and activity, and popular messages.
 
 All tools shell out to the local `catchmeup` CLI (`--json` mode) and return a structured
 envelope: `{"ok": true, "data": ...}` on success, `{"error": "..."}` on failure. The toolset
@@ -35,7 +34,6 @@ catchmeupai.com); if a tool returns an auth error, call `catchmeup_auth_status`.
 | `catchmeup_users_messages` | Messages by a specific author — "what did X say." |
 | `catchmeup_users_activity` | Ranked message counts — "who's most active." |
 | `catchmeup_popular` | Most-engaged messages (reactions/replies) in a range — "highlights." |
-| `catchmeup_notebooklm_create` | Turn a date range into a NotebookLM notebook (slow; only on explicit request). |
 
 ## Typical workflows
 
@@ -56,4 +54,3 @@ catchmeupai.com); if a tool returns an auth error, call `catchmeup_auth_status`.
   and `page_size`.
 - **Summaries can lag** for the current day (they're generated on a schedule); if today looks
   empty, fetch raw logs for today rather than concluding "nothing happened."
-- **`catchmeup_notebooklm_create` is slow** and side-effecting — only when the user asks.

@@ -2,8 +2,7 @@
 
 A [Hermes Agents](https://github.com/NousResearch/hermes-agent) plugin that exposes the
 **Catch Me Up** platform (catchmeupai.com) as native agent tools — Discord/Slack log archive,
-AI daily/weekly summaries, keyword search, per-user messages + activity, popular messages, and
-NotebookLM.
+AI daily/weekly summaries, keyword search, per-user messages + activity, and popular messages.
 
 Each tool is a real, schema'd Hermes tool (not one generic "run a command" tool). Handlers shell
 out to the [`catchmeup` CLI](https://github.com/catchmeupai/cmup-cli) in `--json` mode, so the
@@ -32,8 +31,7 @@ catchmeup --json auth status      # → {"authenticated": true, ...}
 
 `catchmeup_auth_status`, `catchmeup_bots_list`, `catchmeup_channels_list`, `catchmeup_digest`,
 `catchmeup_summaries_list`, `catchmeup_summaries_get`, `catchmeup_logs_get`, `catchmeup_search`,
-`catchmeup_users_messages`, `catchmeup_users_activity`, `catchmeup_popular`,
-`catchmeup_notebooklm_create`.
+`catchmeup_users_messages`, `catchmeup_users_activity`, `catchmeup_popular`.
 
 See [`skill/SKILL.md`](skill/SKILL.md) for the agent-facing reference (core model, workflows,
 gotchas).

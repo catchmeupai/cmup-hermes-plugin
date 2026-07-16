@@ -2,7 +2,7 @@
 
 Exposes the Catch Me Up CLI (`catchmeup`, catchmeupai.com) as agent tools grouped under the
 `catchmeup` toolset — Discord/Slack log archive, AI daily/weekly summaries, keyword search,
-per-user messages + activity, popular messages, and NotebookLM.
+per-user messages + activity, and popular messages.
 
 Each tool shells out to the `catchmeup` CLI in --json mode (see runner.py) and returns a
 structured envelope. Tools are only visible when the CLI is installed AND authenticated.
@@ -15,9 +15,11 @@ import json
 import subprocess
 
 from .runner import CLI, cli_available
-from .tools import auth, bots, logs, notebooklm, summaries, users
+from .tools import auth, bots, logs, summaries, users
+# NOTE: `notebooklm` is intentionally NOT registered right now (not served). The tool code
+# remains in tools/notebooklm.py — re-add it to the import and _TOOL_MODULES to expose it.
 
-_TOOL_MODULES = [auth, bots, logs, summaries, users, notebooklm]
+_TOOL_MODULES = [auth, bots, logs, summaries, users]
 _TOOLSET = "catchmeup"
 
 
